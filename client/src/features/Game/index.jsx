@@ -82,7 +82,7 @@ const Game = ({ history }) => {
                 </Col>
 
                 <Col lg={3} md={4} sm={5}>
-                    <Sider me={me} users={users} votes={round.votes} />
+                    <Sider me={me} users={users} votes={round.votes || {}} showVotes={!round.active} />
                 </Col>
             </Row>
         </Container>
