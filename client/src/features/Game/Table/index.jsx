@@ -5,7 +5,7 @@ import * as PropTypes from 'prop-types';
 
 const cards = [1, 2, 3, 5, 'INF'];
 
-const Table = ({ onVote }) => {
+const Table = ({ onVote, selected }) => {
     return (
         <>
             <div className="table">
@@ -14,6 +14,7 @@ const Table = ({ onVote }) => {
                         key={value}
                         value={value}
                         onClick={() => onVote(value)}
+                        selected={value === selected}
                     />
                 ))}
             </div>

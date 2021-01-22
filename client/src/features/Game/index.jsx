@@ -20,6 +20,7 @@ const Game = ({ history }) => {
         active: false,
     });
     const [loading, setLoading] = useState(true);
+    const [selected, setSelected] = useState(null);
 
     useEffect(() => {
         socket.current = connectToChannel(token);
@@ -50,10 +51,12 @@ const Game = ({ history }) => {
 
     const handleEndRound = () => {
         socket.current.emit('roundend');
+        setSelected(null);
     }
 
     const handleVote = (value) => {
         socket.current.emit('vote', { value })
+        setSelected(value);
     }
 
     if (loading) {
@@ -79,7 +82,7 @@ const Game = ({ history }) => {
                         <Scoreboard topic={round.topic} score={round.result} />
                     )}
 
-                    { round.active && <Table onVote={handleVote} />}
+                    { round.active && <Table onVote={handleVote} selected={selected} />}
                 </Col>
 
                 <Col lg={3} md={4} sm={5}>
