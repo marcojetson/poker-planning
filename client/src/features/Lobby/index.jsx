@@ -4,8 +4,8 @@ import { register } from '../../utils/api';
 import './lobby.css';
 
 const Lobby = ({ history }) => {
-    const [nick, setNick] = useState('marco');
-    const [table, setTable] = useState('hotwheels');
+    const [nick, setNick] = useState('');
+    const [table, setTable] = useState('AhAA sucks');
 
     const handleChannelChange = (e) => {
         setTable(e.currentTarget.value);
