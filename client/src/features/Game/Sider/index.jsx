@@ -6,9 +6,9 @@ import './sider.css';
 const Sider = ({ me, users, votes, showVotes }) => (
     <div>
         <ListGroup>
-            <ListGroup.Item variant="secondary">{me.table}</ListGroup.Item>
+            <ListGroup.Item variant="dark">{me.table}</ListGroup.Item>
             {users.map(({ nick, moderator }) => (
-                <ListGroup.Item key={nick}>
+                <ListGroup.Item variant="light" key={nick}>
                     {nick}
                     {moderator && <span className="float-right">👮</span>}
                     {me.nick === nick && <span className="float-right">👈🏼</span>}

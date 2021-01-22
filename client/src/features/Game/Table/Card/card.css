@@ -4,9 +4,10 @@
     box-sizing: border-box;
     border: 2px solid #808080;
     color: #DCDCDC;
-    font-family: 'Oswald', sans-serif;
-    font-size: 50px;
-    line-height: 20px;
+    font-family: "Arial Narrow", sans-serif;
+    font-weight: bold;
+    font-size: 90px;
+    line-height: 10px;
     width: 166px;
     height: 300px;
     text-align: center;

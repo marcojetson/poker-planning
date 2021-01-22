@@ -17,7 +17,7 @@ const RoundForm = ({ onSubmit, style }) => {
 
     return (
         <Card style={{ width: '100%', ...style }}>
-            <Card.Header>
+            <Card.Header className="text-muted">
                 Topic
             </Card.Header>
             <Card.Body>
@@ -31,7 +31,7 @@ const RoundForm = ({ onSubmit, style }) => {
                             <Form.Control placeholder="Enter topic" value={topic} onChange={handleTopicChange} />
                         </Col>
                         <Col xs="auto">
-                            <Button type="submit">Start round</Button>
+                            <Button type="submit" variant="success">Start round</Button>
                         </Col>
                     </Form.Row>
                 </Form>

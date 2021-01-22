@@ -1,3 +1,10 @@
 .table {
     display: flex;
+    padding: 20px 0 20px 40px;
+}
+
+@media screen and (max-width: 600px) {
+   .table {
+        flex-wrap: wrap;
+    }
 }

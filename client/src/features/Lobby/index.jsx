@@ -36,22 +36,22 @@ const Lobby = ({ history }) => {
     }
 
     return (
-        <Card className="center">
-            <h1>Lobby</h1>
-            <p className="lead">Please choose a name and a table.</p>
-
+        <Card className="center mt-4">
+            <div className="ml-3 mt-3">
+              <h1>Lobby</h1>
+              <p className="lead mt-2 mb-5">Please choose a name and a table.</p>
+            </div>
             <Form onSubmit={handleSubmit} >
-                <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control value={nick} placeholder="name" onChange={handleNickChange} autoFocus />
+                <Form.Group controlId="formBasicEmail" className="mb-3 pr-4">
+                    <Form.Label column>Name</Form.Label>
+                    <Form.Control value={nick} className="ml-3" placeholder="name" onChange={handleNickChange} autoFocus />
+                </Form.Group>
+                <Form.Group controlId="formBasicPassword" className="mb-4 pr-4">
+                    <Form.Label column>Table</Form.Label>
+                    <Form.Control value={table} className="ml-3" placeholder="table" onChange={handleChannelChange} />
                 </Form.Group>
 
-                <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Table</Form.Label>
-                    <Form.Control value={table} placeholder="table" onChange={handleChannelChange} />
-                </Form.Group>
-
-                <Button type="submit">
+                <Button className="m-3" type="submit" variant="success">
                     Take a seat
                 </Button>
             </Form>
