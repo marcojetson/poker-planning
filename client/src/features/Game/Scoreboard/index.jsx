@@ -1,12 +1,21 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
 
-const Scoreboard = ({ score }) => (
-    score ? (
-        <span>{score}</span>
-    ) : (
-        <span>It was a tie.</span>
-    )
+const Scoreboard = ({ topic, score }) => (
+    <div className="jumbotron">
+        <h1 className="display-4">
+            {score ? (
+                <span>{score}</span>
+            ) : (
+                <span>It is a tie.</span>
+            )}
+        </h1>
+        <p className="lead">
+            points
+        </p>
+        <hr className="my-4" />
+        <p>{topic}</p>
+    </div>
 );
 
 Scoreboard.defaultProps = {
@@ -18,6 +27,7 @@ Scoreboard.propTypes = {
         PropTypes.string,
         PropTypes.number,
     ]),
+    topic: PropTypes.string.isRequired,
 };
 
 export default Scoreboard;

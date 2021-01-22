@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Card } from "react-bootstrap";
 import { register } from '../../utils/api';
 import './lobby.css';
 
 const Lobby = ({ history }) => {
-    const [nick, setNick] = useState('marco');
-    const [table, setTable] = useState('hotwheels');
+    const [nick, setNick] = useState('');
+    const [table, setTable] = useState('AhAA sucks');
 
     const handleChannelChange = (e) => {
         setTable(e.currentTarget.value);
@@ -36,7 +36,7 @@ const Lobby = ({ history }) => {
     }
 
     return (
-        <div className="center">
+        <Card className="center">
             <h1>Lobby</h1>
             <p className="lead">Please choose a name and a table.</p>
 
@@ -55,7 +55,7 @@ const Lobby = ({ history }) => {
                     Take a seat
                 </Button>
             </Form>
-        </div>
+        </Card>
     );
 };
 
