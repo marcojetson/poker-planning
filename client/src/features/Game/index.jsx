@@ -4,6 +4,7 @@ import Header from "./Header";
 import Table from "./Table";
 import Sider from "./Sider";
 import RoundForm from "./RoundForm";
+import Scoreboard from "./Scoreboard";
 import { connectToChannel } from "../../utils/api";
 
 const Game = ({ history }) => {
@@ -13,9 +14,10 @@ const Game = ({ history }) => {
     const [users, setUsers] = useState([]);
     const [round, setRound] = useState({
         topic: '',
-        result: 'n/a',
+        result: undefined,
         active: false,
     });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         socket.current = connectToChannel(token);
@@ -30,7 +32,10 @@ const Game = ({ history }) => {
             history.push(`/`);
         })
 
-        socket.current.on('whoami', setMe);
+        socket.current.on('whoami', (me) => {
+            setMe(me);
+            setLoading(false);
+        });
         socket.current.on('userslist', setUsers);
         socket.current.on('round', setRound);
 
@@ -46,8 +51,11 @@ const Game = ({ history }) => {
     }
 
     const handleVote = (value) => {
-        console.log(value);
         socket.current.emit('vote', { value })
+    }
+
+    if (loading) {
+        return 'loading...';
     }
 
     return (
@@ -56,12 +64,15 @@ const Game = ({ history }) => {
             { me.moderator && !round.active && (
                 <RoundForm onSubmit={handleStartRound} />
             )}
-            { !me.moderator && !round.active && (
-                <div>foo</div>// <Scoreboard score={round.result} />
-            )}
+
             { round.active && (
                 <Header title={round.topic} showEndRound={me.moderator} onEndRound={handleEndRound} />
             )}
+
+            { !round.active && round.result !== undefined && (
+                <Scoreboard score={round.result} />
+            )}
+
             <div>
                 <pre>me: {JSON.stringify(me)}</pre>
                 { round.active && <Table onVote={handleVote} />}

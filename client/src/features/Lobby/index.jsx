@@ -28,7 +28,7 @@ const Lobby = ({ history }) => {
             }
 
             if (e.response && e.response.status === 400) {
-                alert('Please fill both inputs.');
+                alert('Please fill both inputs and make sure that you use an unique username.');
 
                 return;
             }
