@@ -1,9 +1,14 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
+import './sider.css';
 
 const Sider = ({ users }) => (
-    <div>
-        { users.map((user) => <pre key={user.nick}>{JSON.stringify(user)}</pre>)}
+    <div class="sider">
+        <ul>
+            {users.map(({ nick, moderator }) => (
+                <li key={nick}>{nick}{moderator && <> (moderator)</>}</li>
+            ))}
+        </ul>
     </div>
 );
 

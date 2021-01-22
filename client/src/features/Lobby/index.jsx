@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { register } from '../../utils/api';
+import './lobby.css';
 
 const Lobby = ({ history }) => {
     const [nick, setNick] = useState('marco');
@@ -36,8 +37,9 @@ const Lobby = ({ history }) => {
     }
 
     return (
-        <div>
+        <div className="center">
             <h1>Lobby</h1>
+            <p class="lead">Please choose a name and a table.</p>
             <form onSubmit={handleSubmit} >
                 <Input value={nick} placeholder="name" onChange={handleNickChange} />
                 <Input value={table} placeholder="table" onChange={handleChannelChange} autoFocus />
