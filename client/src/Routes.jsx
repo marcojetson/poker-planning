@@ -7,7 +7,7 @@ const definitions = [{
     path: '/',
     component: Lobby,
 }, {
-    path: '/table/:table',
+    path: '/:token',
     component: Game,
 }];
 
