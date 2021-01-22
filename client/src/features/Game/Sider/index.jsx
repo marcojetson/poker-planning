@@ -1,15 +1,19 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
+import ListGroup from 'react-bootstrap/ListGroup';
 import './sider.css';
 
 const Sider = ({ me, users }) => (
-    <div className="sider">
+    <div>
         <h3 className="text-center">Table: {me.table}</h3>
-        <ul>
+        <ListGroup>
             {users.map(({ nick, moderator }) => (
-                <li key={nick}>{nick}{moderator && <> (moderator)</>}</li>
+                <ListGroup.Item key={nick}>
+                    {nick}
+                    {moderator && <span className="float-right">👮</span>}
+                </ListGroup.Item>
             ))}
-        </ul>
+        </ListGroup>
     </div>
 );
 
@@ -17,7 +21,7 @@ Sider.propTypes = {
     users: PropTypes.arrayOf(PropTypes.shape({
         nick: PropTypes.string.isRequired,
         moderator: PropTypes.bool.isRequired,
-    }))
+    })),
 };
 
 export default Sider;

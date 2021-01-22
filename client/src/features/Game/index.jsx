@@ -6,6 +6,7 @@ import Sider from "./Sider";
 import RoundForm from "./RoundForm";
 import Scoreboard from "./Scoreboard";
 import { connectToChannel } from "../../utils/api";
+import { Container, Row, Col } from 'react-bootstrap'
 
 const Game = ({ history }) => {
     let socket = useRef(null);
@@ -59,27 +60,32 @@ const Game = ({ history }) => {
     }
 
     return (
-        <>
-            <div>
-                {/*<pre>{JSON.stringify(round)}</pre>*/}
-                {/*<pre>me: {JSON.stringify(me)}</pre>*/}
+        <Container fluid style={{ marginTop: 20 }}>
+            <Row>
+                <Col lg={9} md={8} sm={7}>
+                    {/*<pre>{JSON.stringify(round)}</pre>*/}
+                    {/*<pre>me: {JSON.stringify(me)}</pre>*/}
 
-                { me.moderator && !round.active && (
-                    <RoundForm onSubmit={handleStartRound} />
-                )}
+                    { me.moderator && !round.active && (
+                        <RoundForm onSubmit={handleStartRound} />
+                    )}
 
-                { round.active && (
-                    <Header title={round.topic} showEndRound={me.moderator} onEndRound={handleEndRound} />
-                )}
+                    { round.active && (
+                        <Header title={round.topic} showEndRound={me.moderator} onEndRound={handleEndRound} />
+                    )}
 
-                { !round.active && round.result !== undefined && (
-                    <Scoreboard score={round.result} />
-                )}
+                    { !round.active && round.result !== undefined && (
+                        <Scoreboard score={round.result} />
+                    )}
 
-                { round.active && <Table onVote={handleVote} />}
-                <Sider me={me} users={users} votes={round.votes} />
-            </div>
-        </>
+                    { round.active && <Table onVote={handleVote} />}
+                </Col>
+
+                <Col lg={3} md={4} sm={5}>
+                    <Sider me={me} users={users} votes={round.votes} />
+                </Col>
+            </Row>
+        </Container>
     );
 }
 
