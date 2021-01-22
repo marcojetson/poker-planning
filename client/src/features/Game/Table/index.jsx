@@ -10,8 +10,8 @@ const Table = (props) => {
               { props.decks.map(deck =>
                 <Deck
                   key={deck.id}
-                  title={deck.description}>
-                  cards={deck.cards}
+                  title={deck.description}
+                  cards={deck.cards}>
                 </Deck>
               )}
             </DeckList>
