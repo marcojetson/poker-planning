@@ -5,6 +5,7 @@ import Table from "./Table";
 import Sider from "./Sider";
 import RoundForm from "./RoundForm";
 import { connectToChannel } from "../../utils/api";
+import { Container, Row, Col } from 'react-bootstrap'
 
 const Game = ({ history }) => {
     let socket = useRef(null);
@@ -51,23 +52,27 @@ const Game = ({ history }) => {
     }
 
     return (
-        <>
-            { JSON.stringify(round) }
-            { me.moderator && !round.active && (
-                <RoundForm onSubmit={handleStartRound} />
-            )}
-            { !me.moderator && !round.active && (
-                <div>foo</div>// <Scoreboard score={round.result} />
-            )}
-            { round.active && (
-                <Header title={round.topic} showEndRound={me.moderator} onEndRound={handleEndRound} />
-            )}
-            <div>
+        <Container fluid style={{ marginTop: 20 }}>
+            <Row>
+                <Col lg={9} md={8} sm={7}> 
+                { JSON.stringify(round) }
+                { me.moderator && !round.active && (
+                    <RoundForm onSubmit={handleStartRound} />
+                )}
+                { !me.moderator && !round.active && (
+                    <div>foo</div>// <Scoreboard score={round.result} />
+                )}
+                { round.active && (
+                    <Header title={round.topic} showEndRound={me.moderator} onEndRound={handleEndRound} />
+                )}
                 <pre>me: {JSON.stringify(me)}</pre>
-                { round.active && <Table onVote={handleVote} />}
-                <Sider me={me} users={users} votes={round.votes} />
-            </div>
-        </>
+                    { round.active && <Table onVote={handleVote} />}
+                </Col>
+                <Col lg={3} md={4} sm={5}>
+                    <Sider me={me} users={users} votes={round.votes} />
+                </Col>
+            </Row>
+        </Container>
     );
 }
 
