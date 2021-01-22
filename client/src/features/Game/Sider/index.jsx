@@ -1,16 +1,19 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
-import ListGroup from 'react-bootstrap/ListGroup';
+import { Badge, ListGroup } from 'react-bootstrap';
 import './sider.css';
 
-const Sider = ({ me, users }) => (
+const Sider = ({ me, users, votes, showVotes }) => (
     <div>
-        <h3 className="text-center">Table: {me.table}</h3>
         <ListGroup>
+            <ListGroup.Item variant="secondary">{me.table}</ListGroup.Item>
             {users.map(({ nick, moderator }) => (
                 <ListGroup.Item key={nick}>
                     {nick}
                     {moderator && <span className="float-right">👮</span>}
+                    {me.nick === nick && <span className="float-right">👈🏼</span>}
+                    {votes[nick] && !showVotes && <span className="float-right">✔️</span>}
+                    {votes[nick] && showVotes && <Badge className="float-right" style={{ marginTop: 3, marginRight: 3 }} variant="secondary">{votes[nick]}</Badge>}
                 </ListGroup.Item>
             ))}
         </ListGroup>
