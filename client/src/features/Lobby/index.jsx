@@ -39,6 +39,7 @@ const Lobby = ({ history }) => {
     return (
         <div className="center">
             <h1>Lobby</h1>
+            <p class="lead">Please choose a name and a table.</p>
             <form onSubmit={handleSubmit} >
                 <Input value={nick} placeholder="name" onChange={handleNickChange} />
                 <Input value={table} placeholder="table" onChange={handleChannelChange} autoFocus />
