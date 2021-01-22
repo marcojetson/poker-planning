@@ -112,7 +112,7 @@ io.on('connection', (client) => {
     return;
   }
 
-  moderator = tableClients.get(table).length === 0;
+  const moderator = tableClients.get(table).length === 0;
 
   client.nick = nick;
   client.moderator = moderator;
