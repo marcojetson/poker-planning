@@ -6,79 +6,177 @@ const bodyParser = require('body-parser')
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
+const mode = (array) => {
+  if (array.length == 0) {
+    return null;
+  }
+
+  let modes = [];
+  let occurrences = {};
+  let maxCount = 1;
+
+  for (let i = 0; i < array.length; i++) {
+    const el = array[i];
+
+    if (typeof occurrences[el] === 'undefined') {
+      occurrences[el] = 0;
+    }
+
+    occurrences[el] += 1;
+
+    if (occurrences[el] > maxCount) {
+      modes = [el];
+      maxCount = occurrences[el];
+    } else if (occurrences[el] === maxCount) {
+      modes.push(el);
+    }
+  }
+
+  return modes.length === 1 ? modes[0] : null;
+}
+
 const port = 3001;
 
 const users = [];
-const channelUsers = new Map();
+const findUserByToken = (token) => users.find((user) => user.token === token);
+
+const tableClients = new Map();
+const tableRound = new Map();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-const emitUsersList = (channel) => {
-  io.sockets.in(channel).emit('userslist', channelUsers.get(channel).map(({ nick, moderator }) => ({
+const emitUsersList = (table) => {
+  io.sockets.in(table).emit('userslist', tableClients.get(table).map(({ nick, moderator }) => ({
     nick,
     moderator,
   })));
 };
 
-app.post('/register', (req, res) => {
-  const { channel, nick } = req.body;
+const emitRound = (table) => {
+  const round = tableRound.get(table);
 
-  if (!channel || !nick) {
-    res.status(400).json(['Channel and nick are required']);
+  if (!round) {
     return;
   }
 
-  if (users.some((user) => user.channel === channel && user.nick === nick)) {
+  let votes = { ...round.votes };
+  if (round.active) {
+    for (let nick in votes) {
+      votes[nick] = !!votes[nick];
+    }
+  }
+  
+  io.sockets.in(table).emit('round', { ...round, votes });
+};
+
+app.post('/register', (req, res) => {
+  const { table, nick } = req.body;
+
+  if (!table || !nick) {
+    res.status(400).json(['Table and nick are required']);
+    return;
+  }
+
+  if (users.some((user) => user.table === table && user.nick === nick)) {
     res.status(400).json(['Nick is already in use']);
     return;
   }
 
   const token = uuidv4();
 
-  users.push({ token, nick, channel })
+  users.push({ token, nick, table })
 
   res.json({ token });
-});  
+});
 
 io.on('connection', (client) => {
   const { token } = client.handshake.query;
-  const userIndex = users.findIndex((user) => user.token === token);
+  const currentUser = findUserByToken(token);
 
-  if (userIndex === -1) {
+  if (!currentUser) {
     console.warn(`Invalid login attempt "${token}"`);
     client.disconnect(0);
     return;
   }
 
-  const { channel, nick } = users[userIndex];
+  const { table, nick } = currentUser;
 
-  if (!channelUsers.has(channel)) {
-    channelUsers.set(channel, []);
+  if (!tableClients.has(table)) {
+    tableClients.set(table, []);
   }
 
-  if (channelUsers.get(channel).find((user) => user.nick === nick)) {
-    console.warn(`"${channel}/${nick}" is already connected`);
+  if (tableClients.get(table).find((user) => user.nick === nick)) {
+    console.warn(`"${table}/${nick}" is already connected`);
     client.disconnect(0);
     return;
   }
 
-  moderator = channelUsers.get(channel).length === 0;
+  moderator = tableClients.get(table).length === 0;
 
   client.nick = nick;
   client.moderator = moderator;
-  client.join(channel);
+  client.join(table);
 
-  channelUsers.get(channel).push(client);
+  tableClients.get(table).push(client);
+
+  client.emit('whoami', { table, nick, moderator });
+  emitRound(table);
+  emitUsersList(table);
 
   client.on('disconnect', () => {
-    client.leave(channel);
-    channelUsers.set(channel, channelUsers.get(channel).filter((candidate) => candidate !== client));
-    emitUsersList();
+    client.leave(table);
+    tableClients.set(table, tableClients.get(table).filter((candidate) => candidate !== client));
+    emitUsersList(table);
   });
 
-  client.emit('whoami', { channel, nick, moderator });
-  emitUsersList(channel);
+  client.on('roundstart', ({ topic }) => {
+    const round = tableRound.get(table);
+
+    if (round && round.active || !moderator) {
+      return;
+    }
+
+    tableRound.set(table, {
+      topic,
+      result: null,
+      active: true,
+      votes: {},
+    })
+
+    emitRound(table);
+  });
+
+  client.on('roundend', () => {
+    const round = tableRound.get(table);
+
+    if (!round || !round.active || !moderator) {
+      return;
+    }
+
+    tableRound.set(table, {
+      ...round,
+      result: mode(Object.values(round.votes)),
+      active: false,
+    });
+
+    emitRound(table);
+  });
+
+  client.on('vote', ({ value }) => {
+    const round = tableRound.get(table);
+
+    if (!round || !round.active) {
+      return;
+    }
+
+    tableRound.set(table, {
+      ...round,
+      votes: { ...round.votes, [client.nick]: value }
+    });
+
+    emitRound(table);
+  })
 });
 
 http.listen(port);
