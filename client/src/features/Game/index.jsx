@@ -65,7 +65,7 @@ const Game = ({ history }) => {
             <div>
                 <pre>me: {JSON.stringify(me)}</pre>
                 { round.active && <Table onVote={handleVote} />}
-                <Sider users={users} />
+                <Sider me={me} users={users} votes={round.votes} />
             </div>
         </>
     );
