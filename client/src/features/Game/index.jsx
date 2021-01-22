@@ -67,7 +67,7 @@ const Game = ({ history }) => {
                     {/*<pre>me: {JSON.stringify(me)}</pre>*/}
 
                     { me.moderator && !round.active && (
-                        <RoundForm onSubmit={handleStartRound} />
+                        <RoundForm onSubmit={handleStartRound} style={{ marginBottom: 10 }} />
                     )}
 
                     { round.active && (
@@ -75,7 +75,7 @@ const Game = ({ history }) => {
                     )}
 
                     { !round.active && round.result !== undefined && (
-                        <Scoreboard score={round.result} />
+                        <Scoreboard topic={round.topic} score={round.result} />
                     )}
 
                     { round.active && <Table onVote={handleVote} />}

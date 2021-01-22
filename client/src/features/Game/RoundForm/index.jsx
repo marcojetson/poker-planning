@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {Col, Form, Button, Card} from 'react-bootstrap';
 import * as PropTypes from 'prop-types';
 
-const RoundForm = ({ onSubmit }) => {
+const RoundForm = ({ onSubmit, style }) => {
     const [topic, setTopic] = useState('');
 
     const handleSubmit = (e) => {
@@ -16,7 +16,7 @@ const RoundForm = ({ onSubmit }) => {
     }
 
     return (
-        <Card style={{ width: '100%' }}>
+        <Card style={{ width: '100%', ...style }}>
             <Card.Header>
                 Topic
             </Card.Header>
@@ -40,8 +40,13 @@ const RoundForm = ({ onSubmit }) => {
     );
 };
 
+RoundForm.defaultValues = {
+    style: {},
+};
+
 RoundForm.propTypes = {
     onSubmit: PropTypes.func.isRequired,
+    style: PropTypes.shape({}),
 };
 
 export default RoundForm;
