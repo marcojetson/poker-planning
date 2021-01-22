@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Card } from "react-bootstrap";
 import { register } from '../../utils/api';
 import './lobby.css';
 
@@ -36,7 +36,7 @@ const Lobby = ({ history }) => {
     }
 
     return (
-        <div className="center">
+        <Card className="center">
             <h1>Lobby</h1>
             <p className="lead">Please choose a name and a table.</p>
 
@@ -55,7 +55,7 @@ const Lobby = ({ history }) => {
                     Take a seat
                 </Button>
             </Form>
-        </div>
+        </Card>
     );
 };
 
