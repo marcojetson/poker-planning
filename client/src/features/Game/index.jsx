@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import Header from "./Header";
 import Table from "./Table";
 import Sider from "./Sider";
+import Loading from "./Loading";
 import RoundForm from "./RoundForm";
 import Scoreboard from "./Scoreboard";
 import { connectToChannel } from "../../utils/api";
@@ -56,7 +57,7 @@ const Game = ({ history }) => {
     }
 
     if (loading) {
-        return 'loading...';
+        return <Loading />;
     }
 
     return (
