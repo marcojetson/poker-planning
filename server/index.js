@@ -6,19 +6,19 @@ const bodyParser = require('body-parser')
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
-const port = 3002;
+const port = 3001;
 
-let users = [];
+const users = [];
+const channelUsers = new Map();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-const emitWhoAmI = (client, { channel, nick }) => {
-  client.emit('whoami', { channel, nick });
-};
-
 const emitUsersList = (channel) => {
-  io.sockets.in(channel).emit('userslist', users.filter((user) => user.connected && user.channel === channel).map(({ nick }) => ({ nick })));
+  io.sockets.in(channel).emit('userslist', channelUsers.get(channel).map(({ nick, moderator }) => ({
+    nick,
+    moderator,
+  })));
 };
 
 app.post('/register', (req, res) => {
@@ -36,43 +36,49 @@ app.post('/register', (req, res) => {
 
   const token = uuidv4();
 
-  users.push({
-    token,
-    nick,
-    channel,
-    connected: false,
-  })
+  users.push({ token, nick, channel })
 
   res.json({ token });
 });  
 
 io.on('connection', (client) => {
   const { token } = client.handshake.query;
-  const user = users.find((user) => user.token === token);
+  const userIndex = users.findIndex((user) => user.token === token);
 
-  if (!user) {
+  if (userIndex === -1) {
     console.warn(`Invalid login attempt "${token}"`);
     client.disconnect(0);
     return;
   }
 
-  if (user.connected) {
-    console.warn(`"${user.channel}/${user.nick}" is already connected`);
+  const { channel, nick } = users[userIndex];
+
+  if (!channelUsers.has(channel)) {
+    channelUsers.set(channel, []);
+  }
+
+  if (channelUsers.get(channel).find((user) => user.nick === nick)) {
+    console.warn(`"${channel}/${nick}" is already connected`);
     client.disconnect(0);
     return;
   }
 
-  user.connected = true;
-  client.join(user.channel);
+  moderator = channelUsers.get(channel).length === 0;
+
+  client.nick = nick;
+  client.moderator = moderator;
+  client.join(channel);
+
+  channelUsers.get(channel).push(client);
 
   client.on('disconnect', () => {
-    user.connected = false;
-    client.leave(user.channel);
+    client.leave(channel);
+    channelUsers.set(channel, channelUsers.get(channel).filter((candidate) => candidate !== client));
     emitUsersList();
   });
 
-  emitWhoAmI(client, user);
-  emitUsersList(user.channel);
+  client.emit('whoami', { channel, nick, moderator });
+  emitUsersList(channel);
 });
 
 http.listen(port);
