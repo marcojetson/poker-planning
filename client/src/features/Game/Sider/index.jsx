@@ -3,8 +3,9 @@ import * as PropTypes from 'prop-types';
 import ListGroup from 'react-bootstrap/ListGroup';
 import './sider.css';
 
-const Sider = ({ users }) => (
+const Sider = ({ me, users }) => (
     <div>
+        <h3 className="text-center">Table: {me.table}</h3>
         <ListGroup>
             {users.map(({ nick, moderator }) => (
                 <ListGroup.Item key={nick}>
@@ -21,6 +22,6 @@ Sider.propTypes = {
         nick: PropTypes.string.isRequired,
         moderator: PropTypes.bool.isRequired,
     })),
-}
+};
 
 export default Sider;

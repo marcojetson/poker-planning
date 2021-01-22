@@ -4,6 +4,7 @@ import Header from "./Header";
 import Table from "./Table";
 import Sider from "./Sider";
 import RoundForm from "./RoundForm";
+import Scoreboard from "./Scoreboard";
 import { connectToChannel } from "../../utils/api";
 import { Container, Row, Col } from 'react-bootstrap'
 
@@ -14,9 +15,10 @@ const Game = ({ history }) => {
     const [users, setUsers] = useState([]);
     const [round, setRound] = useState({
         topic: '',
-        result: 'n/a',
+        result: undefined,
         active: false,
     });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         socket.current = connectToChannel(token);
@@ -31,7 +33,10 @@ const Game = ({ history }) => {
             history.push(`/`);
         })
 
-        socket.current.on('whoami', setMe);
+        socket.current.on('whoami', (me) => {
+            setMe(me);
+            setLoading(false);
+        });
         socket.current.on('userslist', setUsers);
         socket.current.on('round', setRound);
 
@@ -47,27 +52,35 @@ const Game = ({ history }) => {
     }
 
     const handleVote = (value) => {
-        console.log(value);
         socket.current.emit('vote', { value })
+    }
+
+    if (loading) {
+        return 'loading...';
     }
 
     return (
         <Container fluid style={{ marginTop: 20 }}>
             <Row>
-                <Col lg={9} md={8} sm={7}> 
-                { JSON.stringify(round) }
-                { me.moderator && !round.active && (
-                    <RoundForm onSubmit={handleStartRound} />
-                )}
-                { !me.moderator && !round.active && (
-                    <div>foo</div>// <Scoreboard score={round.result} />
-                )}
-                { round.active && (
-                    <Header title={round.topic} showEndRound={me.moderator} onEndRound={handleEndRound} />
-                )}
-                <pre>me: {JSON.stringify(me)}</pre>
+                <Col lg={9} md={8} sm={7}>
+                    {/*<pre>{JSON.stringify(round)}</pre>*/}
+                    {/*<pre>me: {JSON.stringify(me)}</pre>*/}
+
+                    { me.moderator && !round.active && (
+                        <RoundForm onSubmit={handleStartRound} />
+                    )}
+
+                    { round.active && (
+                        <Header title={round.topic} showEndRound={me.moderator} onEndRound={handleEndRound} />
+                    )}
+
+                    { !round.active && round.result !== undefined && (
+                        <Scoreboard score={round.result} />
+                    )}
+
                     { round.active && <Table onVote={handleVote} />}
                 </Col>
+
                 <Col lg={3} md={4} sm={5}>
                     <Sider me={me} users={users} votes={round.votes} />
                 </Col>

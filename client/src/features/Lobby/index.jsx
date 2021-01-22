@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Input from '../../components/Input';
-import Button from '../../components/Button';
+import { Form, Button } from "react-bootstrap";
 import { register } from '../../utils/api';
 import './lobby.css';
 
@@ -29,7 +28,7 @@ const Lobby = ({ history }) => {
             }
 
             if (e.response && e.response.status === 400) {
-                alert('Please fill both inputs.');
+                alert('Please fill both inputs and make sure that you use an unique username.');
 
                 return;
             }
@@ -39,16 +38,25 @@ const Lobby = ({ history }) => {
     return (
         <div className="center">
             <h1>Lobby</h1>
-            <p class="lead">Please choose a name and a table.</p>
-            <form onSubmit={handleSubmit} >
-                <Input value={nick} placeholder="name" onChange={handleNickChange} />
-                <Input value={table} placeholder="table" onChange={handleChannelChange} autoFocus />
+            <p className="lead">Please choose a name and a table.</p>
+
+            <Form onSubmit={handleSubmit} >
+                <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control value={nick} placeholder="name" onChange={handleNickChange} autoFocus />
+                </Form.Group>
+
+                <Form.Group controlId="formBasicPassword">
+                    <Form.Label>Table</Form.Label>
+                    <Form.Control value={table} placeholder="table" onChange={handleChannelChange} />
+                </Form.Group>
+
                 <Button type="submit">
                     Take a seat
                 </Button>
-            </form>
+            </Form>
         </div>
     );
-}
+};
 
 export default Lobby;

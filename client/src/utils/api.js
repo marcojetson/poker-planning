@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import axios from 'axios';
 
-const address = '4d666228849d.ngrok.io';
+const address = '54c7332de162.ngrok.io';
 const url = `http://${address}`;
 const ws = `ws://${address}`;
 
