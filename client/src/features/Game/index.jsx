@@ -57,7 +57,7 @@ const Game = ({ history }) => {
                 <RoundForm onSubmit={handleStartRound} />
             )}
             { !me.moderator && !round.active && (
-                // <Scoreboard score={round.result} />
+                <div>foo</div>// <Scoreboard score={round.result} />
             )}
             { round.active && (
                 <Header title={round.topic} showEndRound={me.moderator} onEndRound={handleEndRound} />
