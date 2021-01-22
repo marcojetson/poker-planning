@@ -1,28 +1,22 @@
 import React from 'react';
-import Card from './Card';
-import './table.css';
-import * as PropTypes from 'prop-types';
+import DeckList from './DeckList.jsx';
+import Deck from './Deck/index.jsx';
 
-const cards = [1, 2, 3, 5, 'INF'];
+const Table = (props) => {
 
-const Table = ({ onVote }) => {
     return (
-        <>
-            <div className="table">
-                { cards.map((value) => (
-                    <Card
-                        key={value}
-                        value={value}
-                        onClick={() => onVote(value)}
-                    />
-                ))}
-            </div>
-        </>
+      <div className="decks">
+            <DeckList >
+              { props.decks.map(deck =>
+                <Deck
+                  key={deck.id}
+                  title={deck.description}>
+                  cards={deck.cards}
+                </Deck>
+              )}
+            </DeckList>
+        </div>
     );
-}
-
-Table.propTypes = {
-    onVote: PropTypes.func.isRequired,
 }
 
 export default Table;
