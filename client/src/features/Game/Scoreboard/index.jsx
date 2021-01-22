@@ -11,13 +11,13 @@ const Scoreboard = ({ score }) => (
 
 Scoreboard.defaultProps = {
     score: null,
-}
+};
 
 Scoreboard.propTypes = {
-    score: PropTypes.oneOfType(
+    score: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
-    ),
-}
+    ]),
+};
 
 export default Scoreboard;

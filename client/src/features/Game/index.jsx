@@ -60,21 +60,22 @@ const Game = ({ history }) => {
 
     return (
         <>
-            { JSON.stringify(round) }
-            { me.moderator && !round.active && (
-                <RoundForm onSubmit={handleStartRound} />
-            )}
-
-            { round.active && (
-                <Header title={round.topic} showEndRound={me.moderator} onEndRound={handleEndRound} />
-            )}
-
-            { !round.active && round.result !== undefined && (
-                <Scoreboard score={round.result} />
-            )}
-
             <div>
-                <pre>me: {JSON.stringify(me)}</pre>
+                {/*<pre>{JSON.stringify(round)}</pre>*/}
+                {/*<pre>me: {JSON.stringify(me)}</pre>*/}
+
+                { me.moderator && !round.active && (
+                    <RoundForm onSubmit={handleStartRound} />
+                )}
+
+                { round.active && (
+                    <Header title={round.topic} showEndRound={me.moderator} onEndRound={handleEndRound} />
+                )}
+
+                { !round.active && round.result !== undefined && (
+                    <Scoreboard score={round.result} />
+                )}
+
                 { round.active && <Table onVote={handleVote} />}
                 <Sider me={me} users={users} votes={round.votes} />
             </div>

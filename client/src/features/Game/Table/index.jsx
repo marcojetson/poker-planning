@@ -19,10 +19,10 @@ const Table = ({ onVote }) => {
             </div>
         </>
     );
-}
+};
 
 Table.propTypes = {
     onVote: PropTypes.func.isRequired,
-}
+};
 
 export default Table;
