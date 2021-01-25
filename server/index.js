@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 const express = require('express')
 const app = express();
 const cors = require('cors');
@@ -45,6 +46,7 @@ const tableRound = new Map();
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 const emitUsersList = (table) => {
   io.sockets.in(table).emit('userslist', tableClients.get(table).map(({ nick, moderator }) => ({
@@ -70,7 +72,11 @@ const emitRound = (table) => {
   io.sockets.in(table).emit('round', { ...round, votes });
 };
 
-app.post('/register', (req, res) => {
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
+
+app.post('/rest/register', (req, res) => {
   const { table, nick } = req.body;
 
   if (!table || !nick) {

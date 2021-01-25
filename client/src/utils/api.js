@@ -1,12 +1,14 @@
 import { io } from 'socket.io-client';
 import axios from 'axios';
+import process from 'process';
 
-//const address = 'a6a9417a5e5b.ngrok.io';
+const development = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
+
 const address = 'localhost:3001';
-const url = `http://${address}`;
-const ws = `ws://${address}`;
+const url = development ? `http://${address}` : '';
+const ws = development ? `ws://${address}` : '';
 
-const route = (endpoint) => `${url}/${endpoint}`
+const route = (endpoint) => `${url}/rest/${endpoint}`;
 
 /*
  * The rest endpoints
