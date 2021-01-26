@@ -1,6 +1,5 @@
 import { io } from 'socket.io-client';
 import axios from 'axios';
-import process from 'process';
 
 const development = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
